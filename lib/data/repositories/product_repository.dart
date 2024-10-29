@@ -34,11 +34,18 @@ class ProductRepository {
     return await apiInterface.addItemToWishlist(productId);
   }
 
+  Future<String> removeItemFromWishlist(String wishlistId) async {
+    return await apiInterface.removeItemFromWishlist(wishlistId);
+  }
+
   Future<List<CartModel>> fetchCartItems() async {
     return await apiInterface.fetchCartItems();
   }
 
-  Future<List<WishListModel>> fetchWishListItems() async {
+  /*  Future<List<WishListModel>> fetchWishListItems() async {
+    return await apiInterface.fetchWishlistItems();
+  } */
+  Future<List<String>> fetchWishListItems() async {
     return await apiInterface.fetchWishlistItems();
   }
 
@@ -53,10 +60,6 @@ class ProductRepository {
 
   Future<String> removeItemFromCart(String cartId) async {
     return await apiInterface.removeItemFromCart(cartId);
-  }
-
-  Future<String> removeItemFromWishlist(String wishlistId) async {
-    return await apiInterface.removeItemFromWishlist(wishlistId);
   }
 
   Future<String> addRating(

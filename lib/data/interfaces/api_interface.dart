@@ -9,9 +9,10 @@ abstract class ApiInterface {
   Future<List<ProductModel>> getProductsByCategory(String category);
   Future<List<ProductModel>> getAllProducts();
   Future<List<CartModel>> fetchCartItems();
-  Future<List<WishListModel>> fetchWishlistItems();
+  //wishlist
+  Future<List<String>> fetchWishlistItems();
   Future<String> addItemToCart(CartModel cartModel);
-
+//
   Future<String> addItemToWishlist(
     String productId,
   );

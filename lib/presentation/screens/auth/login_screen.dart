@@ -130,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       SignupController(
                                           firebaseAuthRepo:
                                               Get.find<FirebaseAuthRepo>()));
-                                  Get.toNamed(Routes.tab);
+                                  Get.toNamed(Routes.signup);
                                 },
                                 child: ParaText(
                                     text: 'Register',

@@ -9,7 +9,6 @@ class WishlistController extends GetxController {
 
   WishlistController({required this.productRepository});
 
-  var wishlistItems = <WishListModel>[].obs;
   RxList<String> wishlist = <String>[].obs;
   var isLoading = false.obs;
 
@@ -22,44 +21,31 @@ class WishlistController extends GetxController {
 
   Future<void> fetchWishlist() async {
     try {
-      final fetchedWishlistItems = await productRepository.fetchWishListItems();
-      wishlistItems.assignAll(fetchedWishlistItems);
-    } catch (e) {
-      showErrorSnackbar('Falied to fetch Wishlist items $e');
-    }
-  }
-
-  // Toggle wishlist item: add if not in wishlist, remove if already added
-
-/* 
-  Future<void> toggleWishlistItem(String productId) async {
-    try {
       isLoading(true);
-      if (isInWishlist(productId)) {
-        await productRepository.removeItemFromWishlist(productId);
-        showSuccessSnackbar('Item removed from Wishlist');
-      } else {
-        await productRepository.addItemToWishlist(productId);
-        showSuccessSnackbar('Item added to Wishlist');
-      }
-      await fetchWishlist();
+      final fetchedWishlistItems = await productRepository.fetchWishListItems();
+      wishlist.assignAll(
+          fetchedWishlistItems); // Assign directly as they are now strings
     } catch (e) {
-      showErrorSnackbar('Error toggling wishlist item: $e');
+      showErrorSnackbar('Failed to fetch Wishlist items $e');
     } finally {
       isLoading(false);
     }
-  } */
+  }
+
+  bool isInWishlist(String productId) {
+    return wishlist.contains(productId);
+  }
 
   Future<void> toggleWishlistItem(String productId) async {
     try {
       isLoading(true);
       if (wishlist.contains(productId)) {
         await productRepository.removeItemFromWishlist(productId);
-        wishlist.remove(productId); // Remove locally
+        wishlist.remove(productId);
         showSuccessSnackbar('Item removed from Wishlist');
       } else {
         await productRepository.addItemToWishlist(productId);
-        wishlist.add(productId); // Add locally
+        wishlist.add(productId);
         showSuccessSnackbar('Item added to Wishlist');
       }
     } catch (e) {
@@ -87,10 +73,6 @@ class WishlistController extends GetxController {
     } finally {
       isLoading(false);
     }
-  }
-
-  bool isInWishlist(String productId) {
-    return wishlist.contains(productId);
   }
 
   Future<void> removeItemFromCart(String wishlistId) async {

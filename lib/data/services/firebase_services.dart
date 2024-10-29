@@ -116,6 +116,8 @@ class FirebaseService implements ApiInterface {
     }
   }
 
+  //wishlist
+
   @override
   Future<String> addItemToWishlist(String productId) async {
     try {
@@ -151,32 +153,24 @@ class FirebaseService implements ApiInterface {
   }
 
   @override
-  Future<List<WishListModel>> fetchWishlistItems() async {
+  Future<List<String>> fetchWishlistItems() async {
     try {
       String? userId = Globals.userId;
       User? user = Globals.auth.currentUser;
-      if (userId == null) {
+      if (userId == null || user == null) {
         throw Exception("User not logged in");
       }
-
-      if (user != null) {
-        final snapshot = await Globals.firestore
-            .collection("users")
-            .doc(user.uid)
-            .collection('wishlist')
-            .get();
-      }
-
-      CollectionReference wishlistRef = Globals.firestore
-          .collection('users')
+      final wishlistRef = Globals.firestore
+          .collection("users")
           .doc(userId)
           .collection('wishlist');
 
-      QuerySnapshot snapshot = await wishlistRef.get();
+      final snapshot = await wishlistRef.get();
 
-      return snapshot.docs.map((doc) {
-        return WishListModel.fromMap(doc.data() as Map<String, dynamic>);
-      }).toList();
+      return snapshot.docs
+          .map((doc) =>
+              (doc.data() as Map<String, dynamic>)['productId'] as String)
+          .toList();
     } catch (e) {
       print("Error fetching cart items: $e");
       return [];
