@@ -22,7 +22,7 @@ class OrderModel {
   // Method to convert the OrderModel to a Map for Firestore
   Map<String, dynamic> toMap() {
     return {
-      'orderId' : orderId,
+      'orderId': orderId,
       'userId': userId,
       'productId': productId,
       'quantity': quantity,
@@ -35,12 +35,12 @@ class OrderModel {
   factory OrderModel.fromMap(Map<String, dynamic> map) {
     return OrderModel(
       orderId: map['orderId'] ?? '',
-    userId: map['userId'] ?? '',
-    productId: map['productId'] ?? '',
-    quantity: map['quantity'] ?? '',
-    price: map['price'] ?? '',
-    createdAt: map['createdAt'] ?? '',
-    address: map['address'] ?? '',
+      userId: map['userId'] ?? '',
+      productId: map['productId'] ?? '',
+      quantity: map['quantity'] ?? '',
+      price: map['price'] ?? '',
+      createdAt: map['createdAt'] ?? '',
+      address: map['address'] ?? '',
     );
   }
 }

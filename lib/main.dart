@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'bindings/product_binding.dart';
 import 'constants/app_colors.dart';
 import 'data/services/firebase_options.dart';

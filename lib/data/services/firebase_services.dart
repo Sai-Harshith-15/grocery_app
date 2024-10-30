@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../../globals/globals.dart';
 import '../models/cart_model.dart';
 import '../models/category_model.dart';
@@ -119,61 +118,108 @@ class FirebaseService implements ApiInterface {
   //wishlist
 
   @override
-  Future<String> addItemToWishlist(String productId) async {
+  Future<List<WishListModel>> addItemToWishlist(String productId) async {
+    List<WishListModel> wishlistList = [];
     try {
       User? user = Globals.auth.currentUser;
       if (user == null) {
         print('User not logged in');
-        return 'User not logged in';
+        return [];
       }
 
-      if (user != null) {
-        final DocumentReference docRef = Globals.firestore
-            .collection("users")
-            .doc(user.uid)
-            .collection('wishlist')
-            .doc(productId);
-        final String wishlistId = docRef.id;
+      DocumentReference docRef = Globals.firestore
+          .collection("users")
+          .doc(user.uid)
+          .collection('wishlist')
+          .doc(productId);
+      final String wishlistId = docRef.id;
 
-        final WishListModel wishListModel = WishListModel(
-          wishlistId: wishlistId,
-          userId: user.uid,
-          productId: productId,
-          createdAt: DateTime.now(),
-        );
-        await docRef.set(wishListModel.toMap());
-      }
+      final WishListModel wishListModel = WishListModel(
+        wishlistId: wishlistId,
+        userId: user.uid,
+        productId: productId,
+        createdAt: Timestamp.now(),
+      );
+      await docRef.set(wishListModel.toMap());
+
+      wishlistList.add(wishListModel);
 
       print("Wishlist item added successfully with ID: $productId");
-      return 'Success';
+
+      // Return the updated wishlist after adding the item
+      // return await fetchWishlist(user.uid);
     } catch (e) {
       print("Error in adding item to wishlist: $e");
-      return 'Failed to add item to Wishlist';
     }
+    return wishlistList;
   }
 
   @override
-  Future<List<String>> fetchWishlistItems() async {
+  Stream<List<ProductModel>> fetchWishlistItems() {
+    String? userId = Globals.userId;
+    if (userId == null) {
+      throw Exception("User not logged in");
+    }
+
+    // Listen to the user's wishlist collection
+    final wishlistRef = Globals.firestore
+        .collection("users")
+        .doc(userId)
+        .collection('wishlist');
+
+    return wishlistRef.snapshots().asyncMap((wishlistSnapshot) async {
+      List<ProductModel> products = [];
+
+      // Extract product IDs from wishlist items
+      List<String> productIds = wishlistSnapshot.docs
+          .map((doc) => doc['productId'] as String)
+          .toList();
+
+      // Fetch each product’s details based on its ID
+      for (String productId in productIds) {
+        final productSnapshot =
+            await Globals.firestore.collection("products").doc(productId).get();
+
+        if (productSnapshot.exists) {
+          final productData = productSnapshot.data();
+          if (productData != null) {
+            products.add(ProductModel.fromMap(productData));
+          }
+        } else {
+          print("Product not found for ID: $productId");
+        }
+      }
+
+      return products; // Returns a list of ProductModel objects
+    });
+  }
+
+  @override
+  Future<ProductModel?> getWishlistDetailsByProductById(
+      String productId) async {
     try {
-      String? userId = Globals.userId;
       User? user = Globals.auth.currentUser;
-      if (userId == null || user == null) {
+      if (user == null) {
         throw Exception("User not logged in");
       }
-      final wishlistRef = Globals.firestore
-          .collection("users")
-          .doc(userId)
-          .collection('wishlist');
 
-      final snapshot = await wishlistRef.get();
+      final doc = await Globals.firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('wishlist')
+          .doc(productId)
+          .get();
 
-      return snapshot.docs
-          .map((doc) =>
-              (doc.data() as Map<String, dynamic>)['productId'] as String)
-          .toList();
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>;
+        return ProductModel.fromMap(data);
+      } else {
+        print("No wishlist item found for product ID: $productId");
+        return null;
+      }
     } catch (e) {
-      print("Error fetching cart items: $e");
-      return [];
+      print("Error fetching product: $e");
+      return null;
     }
   }
 
@@ -205,6 +251,8 @@ class FirebaseService implements ApiInterface {
       return '$e';
     }
   }
+
+  //
 
   @override
   Future<String> saveOrder(

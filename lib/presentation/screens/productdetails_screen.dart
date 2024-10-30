@@ -1,13 +1,11 @@
-/* import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../constants/app_colors.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/wishlist_controller.dart';
 import '../../data/models/product_model.dart';
-import '../../routes/routes.dart';
 import '../widgets/inkwell_button.dart';
 import '../widgets/mytext.dart';
 import '../../constants/responsive.dart';
@@ -58,7 +56,7 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
               child: ParaText(text: "No  product found"),
             );
           }
-          // bool isFavorited = wishlistController.isInWishlist(product.productId);
+          bool isFavorited = wishlistController.isInWishlist(product.productId);
           return SafeArea(
             child: Scaffold(
               backgroundColor: AppColors.background,
@@ -66,7 +64,7 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
                 backgroundColor: AppColors.background,
                 leading: IconButton(
                   onPressed: () {
-                    Get.toNamed(Routes.home);
+                    Get.back();
                   },
                   icon: const Icon(Icons.chevron_left),
                   iconSize: 30.0,
@@ -148,7 +146,6 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 // Product Name and Heart Button in a Row
-
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -364,144 +361,6 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
                         ),
                       ],
                     ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        }),
-      ),
-    );
-  }
-}
-
- */
-
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
-import '../../constants/app_colors.dart';
-import '../../controllers/home_controller.dart';
-import '../../controllers/wishlist_controller.dart';
-import '../../data/models/product_model.dart';
-import '../../routes/routes.dart';
-import '../widgets/inkwell_button.dart';
-import '../widgets/mytext.dart';
-import '../../constants/responsive.dart';
-import '../widgets/paraText.dart';
-
-class ProductdetailsScreen extends StatefulWidget {
-  const ProductdetailsScreen({
-    super.key,
-  });
-
-  @override
-  State<ProductdetailsScreen> createState() => _ProductdetailsScreenState();
-}
-
-class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
-  final productController = Get.find<ProductController>();
-  final wishlistController = Get.find<WishlistController>();
-
-  String? productId;
-  @override
-  void initState() {
-    super.initState();
-
-    productId = (Get.arguments as ProductModel?)?.productId;
-    if (productId != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        productController.fetchSingleProductById(productId!);
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: AppColors.background,
-        body: Obx(() {
-          final product = productController.selectedProducts.value;
-
-          if (productController.isLoading.value) {
-            return const Center(
-              child: CupertinoActivityIndicator(),
-            );
-          }
-
-          if (product == null) {
-            return const Center(
-              child: ParaText(text: "No  product found"),
-            );
-          }
-          // bool isFavorited = wishlistController.isInWishlist(product.productId);
-          return SafeArea(
-            child: Scaffold(
-              backgroundColor: AppColors.background,
-              appBar: AppBar(
-                backgroundColor: AppColors.background,
-                leading: IconButton(
-                  onPressed: () {
-                    Get.toNamed(Routes.home);
-                  },
-                  icon: const Icon(Icons.chevron_left),
-                  iconSize: 30.0,
-                ),
-                centerTitle: true,
-                title: ParaText(
-                  text: "${product.productName} Details",
-                  textSize: 20,
-                ),
-                actions: [
-                  IconButton(
-                    onPressed: () {
-                      // Handle exit logic here
-                    },
-                    icon: const Icon(Icons.share),
-                  ),
-                ],
-              ),
-              body: SingleChildScrollView(
-                child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CachedNetworkImage(
-                        imageUrl: product!.coverImg,
-                        width: 100,
-                        height: 100,
-                      ),
-                      // Product Information
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          HeadText(
-                            text: product.productName.toString(),
-                            textSize: 20,
-                            textWeight: FontWeight.w700,
-                          ),
-                          Obx(() {
-                            bool isFavorited = wishlistController
-                                .isInWishlist(product.productId);
-                            return IconButton(
-                              icon: Icon(
-                                isFavorited
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: isFavorited ? Colors.red : Colors.grey,
-                              ),
-                              onPressed: () async {
-                                await wishlistController
-                                    .toggleWishlistItem(product.productId);
-                              },
-                            );
-                          }),
-                        ],
-                      ),
-                    ],
                   ),
                 ),
               ),

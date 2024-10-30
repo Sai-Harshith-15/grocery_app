@@ -1,11 +1,11 @@
 class CartModel {
-  String cartId;     // Auto-generated
-  String userId;      // Reference to users
+  String cartId; // Auto-generated
+  String userId; // Reference to users
   DateTime createdAt; // Timestamp for creation
   DateTime updatedAt; // Timestamp for last update
-  String productId;   // Reference to products
-  int quantity;       // Number of items in the cart
-  double price;       // Price of the product
+  String productId; // Reference to products
+  int quantity; // Number of items in the cart
+  double price; // Price of the product
 
   CartModel({
     required this.cartId,

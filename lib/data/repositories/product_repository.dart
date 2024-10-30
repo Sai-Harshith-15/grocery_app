@@ -30,7 +30,15 @@ class ProductRepository {
     return await apiInterface.addItemToCart(cartModel);
   }
 
-  Future<String> addItemToWishlist(String productId) async {
+  /*  Future<List<ProductModel>> fetchWishlistItems() async {
+    return await apiInterface.fetchWishlistItems();
+  } */
+
+  Stream<List<ProductModel>> fetchWishlistItems() {
+    return apiInterface.fetchWishlistItems();
+  }
+
+  Future<List<WishListModel>> addItemToWishlist(String productId) async {
     return await apiInterface.addItemToWishlist(productId);
   }
 
@@ -38,15 +46,14 @@ class ProductRepository {
     return await apiInterface.removeItemFromWishlist(wishlistId);
   }
 
+  Future<ProductModel?> getWishlistDetailsByProductById(
+      String productId) async {
+    return await apiInterface.getWishlistDetailsByProductById(productId);
+  }
+  //
+
   Future<List<CartModel>> fetchCartItems() async {
     return await apiInterface.fetchCartItems();
-  }
-
-  /*  Future<List<WishListModel>> fetchWishListItems() async {
-    return await apiInterface.fetchWishlistItems();
-  } */
-  Future<List<String>> fetchWishListItems() async {
-    return await apiInterface.fetchWishlistItems();
   }
 
   Future<String> saveOrder(

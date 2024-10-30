@@ -13,13 +13,15 @@ class CategoryGridItem extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         // Calculate container height based on screen width or constraints
-        final containerHeight = constraints.maxWidth * 1.315; // Adjust as needed
+        final containerHeight =
+            constraints.maxWidth * 1.315; // Adjust as needed
 
         return Container(
           height: containerHeight,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8.0),
-            border: Border.all(color: Colors.deepPurple.withOpacity(0.6), width: 2),
+            border:
+                Border.all(color: Colors.deepPurple.withOpacity(0.6), width: 2),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -29,8 +31,9 @@ class CategoryGridItem extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: Image.network(
-                    category.categoryImageUrl,
-                    height: containerHeight / 2, // Half the height of the container
+                    category.categoryImg,
+                    height:
+                        containerHeight / 2, // Half the height of the container
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),

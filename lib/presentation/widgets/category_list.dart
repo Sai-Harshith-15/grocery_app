@@ -23,7 +23,7 @@ class CategoryList extends StatelessWidget {
               width: 100,
               child: Column(
                 children: [
-                  Image.network(category.categoryImageUrl, height: 50, width: 50),
+                  Image.network(category.categoryImg, height: 50, width: 50),
                   Text(category.categoryName, overflow: TextOverflow.ellipsis),
                 ],
               ),

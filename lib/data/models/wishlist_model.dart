@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class WishListModel {
   String wishlistId; // Auto-generated
   String userId; // Reference to users
   String productId; // Reference to products
-  DateTime createdAt; // Timestamp
+  Timestamp createdAt; // Now using Timestamp
 
   WishListModel({
     required this.wishlistId,
@@ -17,17 +19,17 @@ class WishListModel {
       'wishlistId': wishlistId,
       'userId': userId,
       'productId': productId,
-      'createdAt': createdAt.toIso8601String(), // Store timestamp as ISO string
+      'createdAt': createdAt, // No need to convert to string
     };
   }
 
   // Create a WishListModel from a Map (retrieved from database)
   factory WishListModel.fromMap(Map<String, dynamic> map) {
     return WishListModel(
-      wishlistId: map['wishlistId'],
-      userId: map['userId'],
-      productId: map['productId'],
-      createdAt: DateTime.parse(map['createdAt']),
+      wishlistId: map['wishlistId'] ?? '',
+      userId: map['userId'] ?? '',
+      productId: map['productId'] ?? '',
+      createdAt: map['createdAt'] ?? Timestamp.now(),
     );
   }
 }

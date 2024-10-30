@@ -5,89 +5,6 @@ class ProductModel {
   String productName;
   String productDescription;
   double productPrice;
-  int productQuantity;
-  int productDiscount;
-  String categoryId;
-  String categoryName;
-  String coverImg;
-  List<String> urlImages;
-  int stockQuantity;
-  int stockThreshold;
-  int reviewCount;
-  double overallRating;
-
-  Timestamp createdAt;
-  Timestamp updatedAt;
-
-  ProductModel({
-    required this.productId,
-    required this.productName,
-    required this.productDescription,
-    required this.productPrice,
-    this.productQuantity = 1,
-    this.productDiscount = 0,
-    required this.categoryId,
-    required this.categoryName,
-    required this.coverImg,
-    required this.urlImages,
-    required this.stockQuantity,
-    required this.stockThreshold,
-    required this.overallRating,
-    required this.reviewCount,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'productId': productId,
-      'productName': productName,
-      'productDescription': productDescription,
-      'productPrice': productPrice,
-      'productDiscount': productDiscount,
-      'productQuantity': productQuantity,
-      'categoryId': categoryId,
-      'categoryName': categoryName,
-      'coverImg': coverImg,
-      'urlImages': urlImages,
-      'stockQuantity': stockQuantity,
-      'stockThreshold': stockThreshold,
-      'overallRating': overallRating,
-      'reviewCount': reviewCount,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
-    };
-  }
-
-  factory ProductModel.fromMap(Map<String, dynamic> map) {
-    return ProductModel(
-      productId: map['productId'] ?? '',
-      productName: map['productName'] ?? '',
-      productDescription: map['productDescription'] ?? '',
-      productPrice: (map['productPrice'] ?? 0).toDouble(),
-      productDiscount: (map['productDiscount'] ?? 0).toInt(),
-      productQuantity: (map['productQuantity'] ?? 1).toInt(),
-      categoryId: map['categoryId'] ?? '',
-      categoryName: map['categoryName'] ?? '',
-      coverImg: map['coverImg'] ?? '',
-      urlImages: List<String>.from(map['urlImages'] ?? []),
-      stockQuantity: (map['stockQuantity'] ?? 0).toInt(),
-      overallRating: map['overallRating'] ?? 0.0,
-      reviewCount: map['reviewCount'] ?? 0,
-      stockThreshold: (map['stockThreshold'] ?? 0).toInt(),
-      createdAt: map['createdAt'] ?? Timestamp.now(),
-      updatedAt: map['updatedAt'] ?? Timestamp.now(),
-    );
-  }
-}
-
-/* import 'package:cloud_firestore/cloud_firestore.dart';
-
-class ProductModel {
-  String productId;
-  String productName;
-  String productDescription;
-  double productPrice;
   int productDiscount;
   int productQuantity;
   String categoryId;
@@ -142,6 +59,17 @@ class ProductModel {
   }
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
+    Timestamp parseTimestamp(dynamic value) {
+      if (value is String) {
+        return Timestamp.fromMillisecondsSinceEpoch(
+            DateTime.parse(value).millisecondsSinceEpoch);
+      } else if (value is Timestamp) {
+        return value;
+      } else {
+        return Timestamp.now(); // Default if parsing fails
+      }
+    }
+
     return ProductModel(
       productId: map['productId'] ?? '',
       productName: map['productName'] ?? '',
@@ -159,7 +87,8 @@ class ProductModel {
       reviewCount: (map['reviewCount'] ?? 0).toInt(),
       createdAt: map['createdAt'] ?? Timestamp.now(),
       updatedAt: map['updatedAt'] ?? Timestamp.now(),
+      /* createdAt: parseTimestamp(map['createdAt']),
+      updatedAt: parseTimestamp(map['updatedAt']), */
     );
   }
 }
- */
