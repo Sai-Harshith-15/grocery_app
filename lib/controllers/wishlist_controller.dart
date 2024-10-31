@@ -19,26 +19,14 @@ class WishlistController extends GetxController {
 
   // Fetch wishlist items with product details
 
-/*   Future<void> fetchWishlist() async {
-    try {
-      isLoading(true);
-      // Fetch wishlist items directly as ProductModel objects
-      final fetchedWishlistItems = await productRepository.fetchWishlistItems();
-      if (fetchedWishlistItems.isEmpty) {
-        showErrorSnackbar('No items found in the wishlist.');
-      }
-      // Clear and update the wishlist with fetched items
-      wishlist.assignAll(fetchedWishlistItems);
-    } catch (e) {
-      showErrorSnackbar('Failed to fetch Wishlist items: $e');
-    } finally {
-      isLoading(false);
-    }
-  } */
-
   void fetchWishlist() {
+    isLoading(true);
     productRepository.fetchWishlistItems().listen((fetchedWishlistItems) {
-      wishlist.assignAll(fetchedWishlistItems);
+      wishlist.assignAll(fetchedWishlistItems); // Replace current items
+      isLoading(false);
+    }, onError: (e) {
+      showErrorSnackbar('Error fetching wishlist: $e');
+      isLoading(false);
     });
   }
 
@@ -47,7 +35,6 @@ class WishlistController extends GetxController {
     return wishlist.any((product) => product.productId == productId);
   }
 
-  // Toggle wishlist item: Add or remove
   Future<void> toggleWishlistItem(String productId) async {
     try {
       isLoading(true);
@@ -59,7 +46,8 @@ class WishlistController extends GetxController {
         await productRepository.addItemToWishlist(productId);
         final productData =
             await productRepository.getWishlistDetailsByProductById(productId);
-        if (productData != null) {
+        if (productData != null && !isInWishlist(productId)) {
+          // Avoid duplicate
           wishlist.add(productData);
           showSuccessSnackbar('Item added to Wishlist');
         }

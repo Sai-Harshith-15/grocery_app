@@ -43,4 +43,17 @@ class Routes {
       productdetails: (BuildContext context) => ProductdetailsScreen(),
     };
   }
+
+  // onGenerateRoute to handle routes with parameters
+  static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+    if (settings.name?.startsWith(productdetails) ?? false) {
+      final uri = Uri.parse(settings.name!);
+      final productId = uri.queryParameters['productId'] ??
+          'default_product_id'; // Provide default value
+      return MaterialPageRoute(
+        builder: (context) => ProductdetailsScreen(productId: productId),
+      );
+    }
+    return null; // If the route is not recognized, return null
+  }
 }

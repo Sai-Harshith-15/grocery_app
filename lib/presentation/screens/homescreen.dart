@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ? MainAxisAlignment.start
                             : MainAxisAlignment.start,
                     children: [
-                      Icon(Icons.location_pin),
+                      const Icon(Icons.location_pin),
                       const SizedBox(
                         width: 8,
                       ),
@@ -70,38 +70,114 @@ class _HomeScreenState extends State<HomeScreen> {
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 12,
                   ),
+
+                  //search
                   Center(
-                      child: Container(
-                    height: Responsive.isDesktop(context) ||
-                            Responsive.isDesktopLarge(context)
-                        ? 60
-                        : Responsive.isMobile(context) ||
-                                Responsive.isMobileLarge(context)
-                            ? 52
-                            : Responsive.isTablet(context)
-                                ? 56
-                                : 60,
-                    width: Responsive.isDesktop(context) ||
-                            Responsive.isDesktopLarge(context)
-                        ? screenSize.width * 0.5
-                        : Responsive.isMobile(context) ||
-                                Responsive.isMobileLarge(context)
-                            ? screenSize.width * 0.9
-                            : Responsive.isTablet(context)
-                                ? screenSize.width * 0.7
-                                : screenSize.width,
-                    child: RoundedTextField(
-                      controller: productController.searchController,
-                      hintText: "Search store",
-                      prefixIcon: Icons.search,
+                    child: Column(
+                      children: [
+                        Container(
+                          height: Responsive.isDesktop(context) ||
+                                  Responsive.isDesktopLarge(context)
+                              ? 60
+                              : Responsive.isMobile(context) ||
+                                      Responsive.isMobileLarge(context)
+                                  ? 52
+                                  : Responsive.isTablet(context)
+                                      ? 56
+                                      : 60,
+                          width: Responsive.isDesktop(context) ||
+                                  Responsive.isDesktopLarge(context)
+                              ? screenSize.width * 0.5
+                              : Responsive.isMobile(context) ||
+                                      Responsive.isMobileLarge(context)
+                                  ? screenSize.width * 0.9
+                                  : Responsive.isTablet(context)
+                                      ? screenSize.width * 0.7
+                                      : screenSize.width,
+                          child: RoundedTextField(
+                            controller: productController.searchController,
+                            hintText: "Search store",
+                            prefixIcon: Icons.search,
+                            onChanged: (value) {
+                              productController.updateSearchResults(value);
+                            },
+                          ),
+                        ),
+                        Obx(() {
+                          final searchText = productController.searchText.value;
+
+                          // Show results container only when search text is not empty
+                          if (searchText.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+
+                          return Container(
+                            margin: const EdgeInsets.only(top: 10),
+                            height: screenSize.height * 0.4,
+                            width: Responsive.isDesktop(context) ||
+                                    Responsive.isDesktopLarge(context)
+                                ? screenSize.width * 0.5
+                                : Responsive.isMobile(context) ||
+                                        Responsive.isMobileLarge(context)
+                                    ? screenSize.width * 0.9
+                                    : Responsive.isTablet(context)
+                                        ? screenSize.width * 0.7
+                                        : screenSize.width,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: ListView.builder(
+                              itemCount:
+                                  productController.filterproductsList.length,
+                              itemBuilder: (context, index) {
+                                final item =
+                                    productController.filterproductsList[index];
+                                final isProduct = productController
+                                    .filterproductsList
+                                    .contains(item);
+
+                                return ListTile(
+                                  leading: Image.network(
+                                    item.coverImg, // Display image for both products and categories
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  title: HeadText(
+                                    text: item.productName ?? item.categoryName,
+                                  ),
+                                  subtitle: Text(
+                                    isProduct
+                                        ? "Product Category: ${item.categoryName}"
+                                        : "Category",
+                                  ),
+                                  onTap: () {
+                                    // Handle selection here
+                                  },
+                                );
+                              },
+                            ),
+                          );
+                        }),
+                      ],
                     ),
-                  )),
-                  SizedBox(
+                  ),
+
+                  const SizedBox(
                     height: 16,
                   ),
+                  //Carousel
                   Container(
                     child: CarouselSlider(
                         items: offerImages
@@ -130,66 +206,73 @@ class _HomeScreenState extends State<HomeScreen> {
                             // autoPlayAnimationDuration: Duration(seconds: 1),
                             enlargeCenterPage: true,
                             aspectRatio: 16 / 9,
-                            autoPlayInterval: Duration(seconds: 3))),
+                            autoPlayInterval: const Duration(seconds: 3))),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
                   SectionView(
                     title: "Recommended for you",
                     onPressed: () {},
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   Container(
                     height: 220,
                     child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: productController.filterproductsList
+                        itemCount: productController
+                            . /* filterproductsList */ productsList
                             .take(10)
                             .length,
                         itemBuilder: (context, index) {
-                          final products =
-                              productController.filterproductsList[index];
+                          final products = productController
+                              . /* filterproductsList */ productsList[index];
                           return ProductCard(
                             product: products,
                           );
                         }),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
+                  //Shop By Category
                   SectionView(
                     title: "Shop By Category",
                     isShowSeeAllButton: false,
                     onPressed: () {},
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   Container(
                     height: 84,
                     child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount:
-                            productController.filterCategoriesList.length,
+                        itemCount: productController
+                            . /* filterCategoriesList */ categoriesList.length,
                         itemBuilder: (context, index) {
-                          final category =
-                              productController.filterCategoriesList[index];
+                          final category = productController
+                                  . /* filterCategoriesList */ categoriesList[
+                              index];
                           return CategoryCard(category: category);
                         }),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
+
+                  //best selling
                   SectionView(
                     title: "Best Selling",
                     onPressed: () {},
                   ),
-                  SizedBox(
+
+                  const SizedBox(
                     height: 8,
                   ),
+
                   Container(
                     height: 260,
                     child: ListView.builder(
@@ -204,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         }),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 16,
                   ),
                 ],

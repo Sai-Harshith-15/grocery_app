@@ -2,12 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../constants/app_colors.dart';
-import '../../constants/responsive.dart';
 import '../../data/models/product_model.dart';
 import '../../routes/routes.dart';
 import 'mytext.dart';
-
-import '../../constants/app_colors.dart';
 import 'paraText.dart';
 
 class ProductCard extends StatefulWidget {
@@ -42,11 +39,13 @@ class _ProductCardState extends State<ProductCard> {
                 borderRadius: BorderRadius.circular(12),
                 onTap: () {
                   // widget.onTap;
-                  Get.toNamed(
+                  /*  Get.toNamed(
                     Routes.productdetails,
                     arguments: widget.product,
-                  );
-                  // Add any action you want to trigger on tap
+                  ); */
+                  Get.toNamed(
+                      "${Routes.productdetails}?productId=${widget.product.productId}",
+                      arguments: widget.product);
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,7 +124,7 @@ class _ProductCardState extends State<ProductCard> {
                                 width: 24,
                                 child: ParaText(
                                   textAlign: TextAlign.center,
-                                  text: '${widget.product.stockQuantity}',
+                                  text: '${widget.product.productQuantity}',
                                   textSize: 11.62,
                                   textWeight: FontWeight.w600,
                                 ),

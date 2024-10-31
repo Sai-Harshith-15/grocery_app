@@ -22,8 +22,9 @@ class RoundedTextField extends StatelessWidget {
   final Color? fillColor;
   final TextStyle? textStyle;
   final int? maxLength;
+  void Function(String)? onChanged;
 
-  const RoundedTextField({
+  RoundedTextField({
     Key? key,
     this.controller,
     this.textAlignVertical,
@@ -44,6 +45,7 @@ class RoundedTextField extends StatelessWidget {
     this.fillColor,
     this.textStyle,
     this.maxLength,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -54,6 +56,7 @@ class RoundedTextField extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0), // Rounded corners
       ),
       child: TextField(
+        onChanged: onChanged,
         controller: controller,
         obscureText: isObscured,
         keyboardType: keyboardType,

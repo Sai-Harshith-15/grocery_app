@@ -37,6 +37,7 @@ class ProductController extends GetxController {
     'Sister\'s Apartment',
   ];
 //search controller
+  var searchText = ''.obs;
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -44,8 +45,15 @@ class ProductController extends GetxController {
     super.onInit();
     fetchCategories();
     fetchProducts();
-    searchController.addListener(() {
+    /* searchController.addListener(() {
       filterItems(searchController.text);
+      updateSearchResults(searchController.text);
+    }); */
+    searchController.addListener(() {
+      searchText.value = searchController.text; // Update reactive variable
+      // filterItems(searchController.text);
+      updateSearchResults(
+          searchController.text); // Filter products based on search
     });
   }
 
@@ -60,7 +68,8 @@ class ProductController extends GetxController {
       final fetchedCategories = await repository.fetchCategories();
       categoriesList.assignAll(fetchedCategories);
 
-      filterCategoriesList.value = fetchedCategories;
+      // filterCategoriesList.value = fetchedCategories;
+      filterCategoriesList.assignAll(fetchedCategories);
       if (categoriesList.isNotEmpty) {
         defaultCategory = categoriesList[0].categoryId;
         fetchProductsByCategory(defaultCategory);
@@ -91,12 +100,52 @@ class ProductController extends GetxController {
     }
   }
 
+  /*  void updateSearchResults(String query) {
+    if (query.isEmpty) {
+      filterproductsList.clear();
+      filterCategoriesList.clear();
+    } else {
+      filterproductsList.value = productsList
+          .where((product) =>
+              product.productName.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+      filterCategoriesList.value = categoriesList
+          .where((category) =>
+              category.categoryName.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    }
+  } */
+
+  void updateSearchResults(String query) {
+    if (query.isEmpty) {
+      filterproductsList
+          .assignAll(productsList); // Show all products if query is empty
+      filterCategoriesList
+          .assignAll(categoriesList); // Show all categories if query is empty
+    } else {
+      final lowerCaseQuery = query.toLowerCase();
+
+      // Filter products based on the search query
+      filterproductsList.value = productsList
+          .where((product) =>
+              product.productName.toLowerCase().contains(lowerCaseQuery))
+          .toList();
+
+      // Filter categories based on the search query
+      filterCategoriesList.value = categoriesList
+          .where((category) =>
+              category.categoryName.toLowerCase().contains(lowerCaseQuery))
+          .toList();
+    }
+  }
+
   Future<void> fetchProducts() async {
     try {
       final products = await repository.getAllProducts();
       productsList.assignAll(products);
 
-      filterproductsList.value = products;
+      // filterproductsList.value = products;
+      filterproductsList.assignAll(products);
     } catch (e) {
       Get.snackbar('Error', 'Failed to fetch products: $e');
     }

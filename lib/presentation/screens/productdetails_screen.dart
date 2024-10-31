@@ -12,9 +12,8 @@ import '../../constants/responsive.dart';
 import '../widgets/paraText.dart';
 
 class ProductdetailsScreen extends StatefulWidget {
-  const ProductdetailsScreen({
-    super.key,
-  });
+  final String? productId;
+  ProductdetailsScreen({super.key, this.productId});
 
   @override
   State<ProductdetailsScreen> createState() => _ProductdetailsScreenState();
@@ -24,17 +23,19 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
   final productController = Get.find<ProductController>();
   final wishlistController = Get.find<WishlistController>();
 
-  String? productId;
   @override
   void initState() {
     super.initState();
 
-    productId = (Get.arguments as ProductModel?)?.productId;
-    if (productId != null) {
+    // productId = (Get.arguments as ProductModel?)?.productId;
+    /* if (productId != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        productController.fetchSingleProductById(productId!);
+        productController.fetchSingleProductById(widget.productId!);
       });
-    }
+    } */
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      productController.fetchSingleProductById(widget.productId!);
+    });
   }
 
   @override
@@ -158,25 +159,21 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
                                           : 24,
                                       textWeight: FontWeight.w700,
                                     ),
-                                    Obx(() {
-                                      bool isFavorited = wishlistController
-                                          .isInWishlist(product.productId);
-                                      return IconButton(
-                                        icon: Icon(
-                                          isFavorited
-                                              ? Icons.favorite
-                                              : Icons.favorite_border,
-                                          color: isFavorited
-                                              ? Colors.red
-                                              : Colors.grey,
-                                        ),
-                                        onPressed: () async {
-                                          await wishlistController
-                                              .toggleWishlistItem(
-                                                  product.productId);
-                                        },
-                                      );
-                                    }),
+                                    IconButton(
+                                      icon: Icon(
+                                        isFavorited
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        color: isFavorited
+                                            ? Colors.red
+                                            : Colors.grey,
+                                      ),
+                                      onPressed: () async {
+                                        await wishlistController
+                                            .toggleWishlistItem(
+                                                product.productId);
+                                      },
+                                    ),
                                   ],
                                 ),
                                 const SizedBox(height: 8),
