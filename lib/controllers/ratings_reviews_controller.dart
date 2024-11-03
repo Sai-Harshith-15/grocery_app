@@ -1,9 +1,11 @@
 import 'package:get/get.dart';
 
+
 import '../data/repositories/product_repository.dart';
 import '../presentation/widgets/custom_snackbar.dart';
 
 class RatingsAndReviewsController extends GetxController {
+
   final ProductRepository repository;
 
   RatingsAndReviewsController({required this.repository});
@@ -64,15 +66,14 @@ class RatingsAndReviewsController extends GetxController {
     showSuccessSnackbar('Review Count: ${productRating['reviewCount']}');
 
     // Fetch all user reviews
-    List<Map<String, dynamic>> reviews =
-        await repository.fetchAllReviews(productId);
+    List<Map<String, dynamic>> reviews = await repository.fetchAllReviews(productId);
 
     for (var review in reviews) {
-      showSuccessSnackbar(
-          'User ID: ${review['userId']}, Rating: ${review['rating']}');
+      showSuccessSnackbar('User ID: ${review['userId']}, Rating: ${review['rating']}');
       if (review.containsKey('review')) {
         showSuccessSnackbar('Review: ${review['review']}');
       }
     }
   }
+
 }

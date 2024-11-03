@@ -46,6 +46,7 @@ class WishlistController extends GetxController {
         await productRepository.addItemToWishlist(productId);
         final productData =
             await productRepository.getWishlistDetailsByProductById(productId);
+        // showSuccessSnackbar('Item added to Wishlist');
         if (productData != null && !isInWishlist(productId)) {
           // Avoid duplicate
           wishlist.add(productData);

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/responsive.dart';
 import '../../../controllers/login_controller.dart';
@@ -9,17 +8,17 @@ import '../../../data/interfaces/auth_interface.dart';
 import '../../../data/repositories/firebase_auth_repo.dart';
 import '../../../data/services/auth_services.dart';
 import '../../../routes/routes.dart';
-import '../../widgets/inkwell_button.dart';
 import '../../widgets/mytext.dart';
 import '../../widgets/paraText.dart';
 
 class WelcomeScreen extends StatelessWidget {
+  final LoginController loginController = Get.find<LoginController>();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: SafeArea(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: Responsive.isDesktop(context) ||
@@ -80,8 +79,8 @@ class WelcomeScreen extends StatelessWidget {
                         ? 400
                         : 800,
                     child: ElevatedButton(
-                      onPressed: () {
-                        // Add your Google sign-in logic here
+                      onPressed: () async {
+                        await loginController.loginWithGoogle();
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -89,7 +88,7 @@ class WelcomeScreen extends StatelessWidget {
                           SvgPicture.asset(
                             'assets/images/google.svg',
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 8.0,
                           ),
                           HeadText(

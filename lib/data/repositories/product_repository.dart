@@ -18,7 +18,7 @@ class ProductRepository {
     return await apiInterface.getProductsByCategory(category);
   }
 
-  Future<ProductModel?> fetchSingleProductById(String productId) async {
+  Future<ProductModel?> fetchSingleProductByCategory(String productId) async {
     return await apiInterface.fetchsingleProductFromFirebase(productId);
   }
 
@@ -30,16 +30,16 @@ class ProductRepository {
     return await apiInterface.addItemToCart(cartModel);
   }
 
-  /*  Future<List<ProductModel>> fetchWishlistItems() async {
-    return await apiInterface.fetchWishlistItems();
-  } */
-
   Stream<List<ProductModel>> fetchWishlistItems() {
     return apiInterface.fetchWishlistItems();
   }
 
   Future<List<WishListModel>> addItemToWishlist(String productId) async {
     return await apiInterface.addItemToWishlist(productId);
+  }
+
+  Future<List<CartModel>> fetchCartItems() async {
+    return await apiInterface.fetchCartItems();
   }
 
   Future<String> removeItemFromWishlist(String wishlistId) async {
@@ -50,20 +50,15 @@ class ProductRepository {
       String productId) async {
     return await apiInterface.getWishlistDetailsByProductById(productId);
   }
-  //
 
-  Future<List<CartModel>> fetchCartItems() async {
-    return await apiInterface.fetchCartItems();
+  Future<String> saveOrder(String userId, List<CartModel> cartItems,
+      String address, OrderStatus status) async {
+    return await apiInterface.saveOrder(userId, cartItems, address, status);
   }
 
-  Future<String> saveOrder(
-      String userId, List<CartModel> cartItems, String address) async {
-    return await apiInterface.saveOrder(userId, cartItems, address);
-  }
-
-  Future<List<OrderModel>> fetchOrders() async {
-    return await apiInterface.fetchOrders();
-  }
+  // Future<List<OrderModel>> fetchOrders() async {
+  //   return await apiInterface.fetchOrders();
+  // }
 
   Future<String> removeItemFromCart(String cartId) async {
     return await apiInterface.removeItemFromCart(cartId);
@@ -85,5 +80,15 @@ class ProductRepository {
 
   Future<List<Map<String, dynamic>>> fetchAllReviews(String productId) async {
     return await apiInterface.fetchAllReviews(productId);
+  }
+
+  Future<void> incrementProductQuantity(
+      String productId, int newQuantity) async {
+    return await apiInterface.incrementProductQuantity(productId, newQuantity);
+  }
+
+  Future<void> decrementProductQuantity(
+      String productId, int newQuantity) async {
+    return await apiInterface.decrementProductQuantity(productId, newQuantity);
   }
 }

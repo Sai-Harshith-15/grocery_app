@@ -1,290 +1,231 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 import '../../constants/app_colors.dart';
 import '../../constants/responsive.dart';
+import '../../controllers/profile_controller.dart';
 import '../widgets/mytext.dart';
 import '../widgets/paraText.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  bool notificationsEnabled = true;
+  bool darkModeEnabled = true;
+
+  ProfileController controller = Get.find<ProfileController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
-        top: true,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Responsive.isMobile(context)
-                ? 24
-                : Responsive.isMobileLarge(context)
-                    ? 36
-                    : 60,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: HeadText(
+          text: 'Profile',
+          textColor: AppColors.primaryBlack,
+          textSize: 20,
+          textWeight: FontWeight.w700,
+        ),
+        centerTitle: true,
+        backgroundColor: AppColors.background,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        children: [
+          ListTile(
+            leading: const CircleAvatar(
+              radius: 50,
+              backgroundImage: AssetImage('assets/images/profile.jpeg'),
+            ),
+            title: const HeadText(
+              text: 'Viprat',
+              textSize: 18,
+              textWeight: FontWeight.bold,
+            ),
+            subtitle: ParaText(
+              text: 'Viprat@example.com',
+              textSize: 16,
+              textColor: AppColors.primaryBlack,
+            ),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
           ),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // User Profile Section
-                SizedBox(
-                  height: Responsive.isDesktop(context)
-                      ? 25
-                      : Responsive.isDesktopLarge(context)
-                          ? 30
-                          : Responsive.isTablet(context)
-                              ? 140
-                              : Responsive.isMobileLarge(context)
-                                  ? 120
-                                  : 18,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipOval(
-                      child: Image.asset(
-                        "assets/images/man.png",
-                        fit: BoxFit.cover,
-                        height: Responsive.isMobile(context)
-                            ? 60
-                            : Responsive.isMobileLarge(context)
-                                ? 80
-                                : Responsive.isTablet(context)
-                                    ? 100
-                                    : Responsive.isDesktop(context)
-                                        ? 120
-                                        : 140,
-                        width: Responsive.isMobile(context)
-                            ? 60
-                            : Responsive.isMobileLarge(context)
-                                ? 80
-                                : Responsive.isTablet(context)
-                                    ? 100
-                                    : Responsive.isDesktop(context)
-                                        ? 120
-                                        : 140,
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        HeadText(
-                          text: 'John Doe',
-                          textWeight: FontWeight.w700,
-                          textSize: Responsive.isDesktop(context)
-                              ? 35.0
-                              : Responsive.isDesktopLarge(context)
-                                  ? 40.0
-                                  : Responsive.isTablet(context)
-                                      ? 30.0
-                                      : Responsive.isMobileLarge(context)
-                                          ? 25.0
-                                          : 20.16,
-                          textHeight: 18.0,
-                          letterSpacing: -0.5,
-                        ),
-                        ParaText(
-                          text: 'lmshuvo97@gmail.com',
-                          textWeight: FontWeight.w400,
-                          textSize: 16.8,
-                          textHeight: 18.0,
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.edit_outlined,
-                            color: AppColors.primaryGreen)),
-                    // SizedBox(
-                    //   width: 28,
-                    // )
-                  ],
-                ),
-                SizedBox(
-                  height: Responsive.isDesktop(context)
-                      ? 25
-                      : Responsive.isDesktopLarge(context)
-                          ? 30
-                          : Responsive.isTablet(context)
-                              ? 60
-                              : 15,
-                ),
+          const SectionHeader(title: 'Account'),
+          ListTile(
+            leading: Icon(
+              Icons.person_outline,
+              color: AppColors.primaryBlack,
+              size: 30,
+            ),
+            title: const HeadText(
+              text: 'Edit Profile',
+              textSize: 16,
+              textWeight: FontWeight.bold,
+            ),
+            trailing: Icon(Icons.chevron_right, color: AppColors.primaryBlack),
+            onTap: () {},
+          ),
+          ListTile(
+            leading:
+                Icon(Icons.vpn_key_outlined, color: AppColors.primaryBlack),
+            title: const HeadText(
+              text: 'Change Password',
+              textSize: 16,
+              textWeight: FontWeight.bold,
+            ),
+            trailing: Icon(Icons.chevron_right, color: AppColors.primaryBlack),
+            onTap: () {},
+          ),
+          const SectionHeader(title: 'General'),
+          ListTile(
+            leading: Icon(Icons.shopping_bag_outlined,
+                color: AppColors.primaryBlack),
+            title: const HeadText(
+              text: 'Orders',
+              textSize: 16,
+              textWeight: FontWeight.bold,
+            ),
+            trailing: Icon(Icons.chevron_right, color: AppColors.primaryBlack),
+            onTap: () {},
+          ),
+          ListTile(
+            leading:
+                Icon(Icons.favorite_outline, color: AppColors.primaryBlack),
+            title: const HeadText(
+              text: 'Favorites',
+              textSize: 16,
+              textWeight: FontWeight.bold,
+            ),
+            trailing: Icon(Icons.chevron_right, color: AppColors.primaryBlack),
+            onTap: () {},
+          ),
+          ListTile(
+            leading:
+                Icon(Icons.location_on_outlined, color: AppColors.primaryBlack),
+            title: const HeadText(
+              text: 'My Addresses',
+              textSize: 16,
+              textWeight: FontWeight.bold,
+            ),
+            trailing: Icon(Icons.chevron_right, color: AppColors.primaryBlack),
+            onTap: () {},
+          ),
+          ListTile(
+            leading:
+                Icon(Icons.credit_card_outlined, color: AppColors.primaryBlack),
+            title: const HeadText(
+              text: 'My Cards',
+              textSize: 16,
+              textWeight: FontWeight.bold,
+            ),
+            trailing: Icon(Icons.chevron_right, color: AppColors.primaryBlack),
+            onTap: () {},
+          ),
+          const SectionHeader(title: 'App Settings'),
 
-                // List of Options
-                Column(
-                  children: [
-                    Column(
-                      // child: ListView(
-                      children: [
-                        optionItem(
-                            context, "assets/images/bag.svg", 'Orders', () {}),
-                        SizedBox(
-                          height: Responsive.isDesktop(context)
-                              ? 25
-                              : Responsive.isDesktopLarge(context)
-                                  ? 30
-                                  : Responsive.isTablet(context)
-                                      ? 60
-                                      : 15,
-                        ),
-                        optionItem(context, "assets/images/location.svg",
-                            'Delivery Address', () {}),
-                        SizedBox(
-                          height: Responsive.isDesktop(context)
-                              ? 25
-                              : Responsive.isDesktopLarge(context)
-                                  ? 30
-                                  : Responsive.isTablet(context)
-                                      ? 60
-                                      : 15,
-                        ),
-                        optionItem(context, "assets/images/payment.svg",
-                            'Payment Methods', () {}),
-                        SizedBox(
-                          height: Responsive.isDesktop(context)
-                              ? 25
-                              : Responsive.isDesktopLarge(context)
-                                  ? 30
-                                  : Responsive.isTablet(context)
-                                      ? 60
-                                      : 15,
-                        ),
-                        optionItem(context, "assets/images/profile.svg",
-                            'Profile', () {}),
-                        SizedBox(
-                          height: Responsive.isDesktop(context)
-                              ? 25
-                              : Responsive.isDesktopLarge(context)
-                                  ? 30
-                                  : Responsive.isTablet(context)
-                                      ? 60
-                                      : 15,
-                        ),
-                        optionItem(
-                            context, "assets/images/help.svg", 'Help', () {}),
-                        SizedBox(
-                          height: Responsive.isDesktop(context)
-                              ? 25
-                              : Responsive.isDesktopLarge(context)
-                                  ? 30
-                                  : Responsive.isTablet(context)
-                                      ? 60
-                                      : 15,
-                        ),
-                        optionItem(
-                            context, "assets/images/about.svg", 'About', () {}),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.12,
-                        ),
-                        Container(
-                            width: MediaQuery.of(context).size.width * 1.0,
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 24, horizontal: 30),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(36),
-                                  ),
-                                  backgroundColor: AppColors
-                                      .primaryGreen, // Light background color
-                                  // color: Colors.green, // Text color
-                                ),
-                                onPressed: () {},
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Icon(
-                                      Icons.logout,
-                                      color: AppColors.background,
-                                    ),
-                                    SizedBox(
-                                        width: Responsive.isDesktop(context) ||
-                                                Responsive.isDesktopLarge(
-                                                    context)
-                                            ? MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.44
-                                            : Responsive.isTablet(context)
-                                                ? MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.38
-                                                : MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.2),
-                                    Center(
-                                      widthFactor: Responsive.isMobile(context)
-                                          ? 1.0
-                                          : Responsive.isMobileLarge(context)
-                                              ? 2
-                                              : Responsive.isTablet(context)
-                                                  ? 0
-                                                  : Responsive.isDesktop(
-                                                          context)
-                                                      ? 0
-                                                      : 0,
-                                      child: HeadText(
-                                        text: 'Log Out',
-                                        textColor: AppColors.background,
-                                        textWeight: FontWeight.w700,
-                                        textSize: Responsive.isDesktop(context)
-                                            ? 35.0
-                                            : Responsive.isDesktopLarge(context)
-                                                ? 40.0
-                                                : Responsive.isTablet(context)
-                                                    ? 30.0
-                                                    : Responsive.isMobileLarge(
-                                                            context)
-                                                        ? 25.0
-                                                        : 20.16,
-                                        textHeight: 18,
-                                        textAlign: TextAlign.center,
-                                        letterSpacing: -0.5,
-                                      ),
-                                    ),
-                                  ],
-                                )))
-                      ],
-                    ),
-                  ],
+          ExpansionTile(
+            leading:
+                Icon(Icons.notifications_none, color: AppColors.primaryBlack),
+            title: const HeadText(
+              text: 'Notifications',
+              textSize: 16,
+              textWeight: FontWeight.bold,
+            ),
+            // ignore: sort_child_properties_last
+            children: [
+              ListTile(
+                title: const HeadText(
+                  text: 'Enable Notifications',
+                  textSize: 16,
+                  textWeight: FontWeight.bold,
                 ),
-              ],
+                trailing: Switch(
+                  value: notificationsEnabled,
+                  onChanged: (value) {
+                    setState(() {
+                      notificationsEnabled = value;
+                    });
+                  },
+                  activeColor: Colors.green,
+                ),
+              ),
+            ],
+            tilePadding: const EdgeInsets.symmetric(
+                horizontal:
+                    16), // Optional: remove padding for a more compact look
+            shape: const RoundedRectangleBorder(
+              side: BorderSide(
+                  color: Colors.transparent), // Remove top and bottom borders
             ),
           ),
-        ),
+
+          ListTile(
+            leading:
+                Icon(Icons.dark_mode_outlined, color: AppColors.primaryBlack),
+            title: const HeadText(
+              text: 'Dark Mode',
+              textSize: 16,
+              textWeight: FontWeight.bold,
+            ),
+            trailing: Switch(
+              value: darkModeEnabled,
+              onChanged: (value) {
+                setState(() {
+                  darkModeEnabled = value;
+                });
+              },
+              activeColor: AppColors.TertiaryGreen,
+            ),
+          ),
+          // ListTile(
+          //   leading: const Icon(Icons.language, color:AppColors.primaryBlack),
+          //   title: const Text('Language'),
+          //   trailing: Row(
+          //     mainAxisSize: MainAxisSize.min,
+          //     children: const [
+          //       Text('English', style: TextStyle(color:AppColors.primaryBlack)),
+          //       Icon(Icons.chevron_right, color:AppColors.primaryBlack),
+          //     ],
+          //   ),
+          //   onTap: () {},
+          // ),
+          ListTile(
+            leading: Icon(Icons.logout, color: AppColors.primaryBlack),
+            title: const HeadText(
+              text: 'Logout',
+              textSize: 16,
+              textWeight: FontWeight.bold,
+            ),
+            onTap: () async {
+              await controller.logout();
+            },
+          ),
+        ],
       ),
     );
   }
+}
 
-  Widget optionItem(BuildContext context, String image, String text,
-      void Function()? onPressed) {
-    return ListTile(
-      contentPadding: EdgeInsets.all(0),
-      leading: SvgPicture.asset(image, color: AppColors.primaryGreen),
-      title: Padding(
-        padding: const EdgeInsets.only(left: 10),
+class SectionHeader extends StatelessWidget {
+  final String title;
+
+  const SectionHeader({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: HeadText(
-            text: text,
-            textWeight: FontWeight.w600,
-            textSize: Responsive.isDesktop(context)
-                ? 35.0
-                : Responsive.isDesktopLarge(context)
-                    ? 40.0
-                    : Responsive.isTablet(context)
-                        ? 30.0
-                        : Responsive.isMobileLarge(context)
-                            ? 25.0
-                            : 20.16,
-            textHeight: 22.5,
-            letterSpacing: -0.6),
-      ),
-      trailing: IconButton(
-        onPressed: onPressed,
-        icon: Icon(Icons.arrow_forward_ios),
-      ),
-    );
+          text: title,
+          textColor: AppColors.secondaryGreen,
+          textSize: 16,
+          textWeight: FontWeight.bold,
+        ));
   }
 }

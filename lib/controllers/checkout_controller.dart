@@ -30,8 +30,8 @@ class CheckoutController extends GetxController {
     }
   }
 
-  Future<void> checkout(
-      List<CartModel> cartItems, String userId, String address) async {
-    await productRepository.saveOrder(userId, cartItems, address);
-  }
+  // Future<void> checkout(
+  //     List<CartModel> cartItems, String userId, String address) async {
+  //   await productRepository.saveOrder(userId, cartItems, address,);
+  // }
 }

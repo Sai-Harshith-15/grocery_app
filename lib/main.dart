@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       routes: Routes.getRoutes(),
       initialRoute: Routes.splashscreen,
       initialBinding: ProductBinding(),
-      onGenerateRoute: Routes.onGenerateRoute,
+      // onGenerateRoute: Routes.onGenerateRoute,
     );
   }
 }

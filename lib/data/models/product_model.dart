@@ -59,17 +59,6 @@ class ProductModel {
   }
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
-    Timestamp parseTimestamp(dynamic value) {
-      if (value is String) {
-        return Timestamp.fromMillisecondsSinceEpoch(
-            DateTime.parse(value).millisecondsSinceEpoch);
-      } else if (value is Timestamp) {
-        return value;
-      } else {
-        return Timestamp.now(); // Default if parsing fails
-      }
-    }
-
     return ProductModel(
       productId: map['productId'] ?? '',
       productName: map['productName'] ?? '',
@@ -87,8 +76,6 @@ class ProductModel {
       reviewCount: (map['reviewCount'] ?? 0).toInt(),
       createdAt: map['createdAt'] ?? Timestamp.now(),
       updatedAt: map['updatedAt'] ?? Timestamp.now(),
-      /* createdAt: parseTimestamp(map['createdAt']),
-      updatedAt: parseTimestamp(map['updatedAt']), */
     );
   }
 }

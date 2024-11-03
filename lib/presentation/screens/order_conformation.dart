@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:grocery_app/routes/routes.dart';
 
 import '../../constants/app_colors.dart';
 import '../widgets/inkwell_button.dart';
@@ -95,7 +97,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen>
               // Back to home button
               TextButton(
                 onPressed: () {
-                  // Add functionality here
+                  Get.toNamed(Routes.tab);
                 },
                 child: HeadText(
                   text: 'Back to home',

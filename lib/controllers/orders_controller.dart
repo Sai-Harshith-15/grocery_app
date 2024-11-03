@@ -10,7 +10,7 @@ class OrdersController extends GetxController {
 
   var orders = <OrderModel>[].obs;
 
-  Future<void> loadOrders() async {
-    orders.value = await productRepository.fetchOrders();
-  }
+  // Future<void> loadOrders() async {
+  //   orders.value = await productRepository.fetchOrders();
+  // }
 }

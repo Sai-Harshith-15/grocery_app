@@ -23,6 +23,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final LoginController controller = Get.find<LoginController>();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: Form(
-                    key: controller.formKey,
+                    key: formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -82,12 +83,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             suffixIcon: IconButton(
                                 onPressed: () {},
                                 icon: Icon(Icons.visibility_off))),
-                        SizedBox(height: 12),
+                        const SizedBox(height: 12),
                         // Forgot Password?
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Get.toNamed(Routes.forgotPassword);
+                              },
                               child: ParaText(
                                 text: 'Forgot Password?',
                                 textSize: 14,
@@ -95,19 +98,31 @@ class _LoginScreenState extends State<LoginScreen> {
                                 textColor: AppColors.primaryBlack,
                               )),
                         ),
-                        SizedBox(height: 24),
+                        const SizedBox(height: 24),
                         // Log In Button
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             InkWellButton(
                                 text: 'Login',
-                                onPressed: () {
-                                  controller.login();
+                                onPressed: () async {
+                                  if (formKey.currentState!.validate() &&
+                                      controller
+                                          .emailController.text.isNotEmpty &&
+                                      controller
+                                          .passwordController.text.isNotEmpty) {
+                                    await controller.login();
+                                  } else {
+                                    Get.snackbar(
+                                      'Invalid Input',
+                                      'Please provide valid details in all fields.',
+                                      snackPosition: SnackPosition.BOTTOM,
+                                    );
+                                  }
                                 }),
                           ],
                         ),
-                        SizedBox(height: 24),
+                        const SizedBox(height: 24),
                         // Sign Up link
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -120,16 +135,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             TextButton(
                                 onPressed: () {
-                                  Get.lazyPut<AuthInterface>(
-                                      () => FirebaseAuthServices());
-                                  Get.lazyPut<FirebaseAuthRepo>(() =>
-                                      FirebaseAuthRepo(
-                                          interfaces:
-                                              Get.find<AuthInterface>()));
-                                  Get.lazyPut<SignupController>(() =>
-                                      SignupController(
-                                          firebaseAuthRepo:
-                                              Get.find<FirebaseAuthRepo>()));
                                   Get.toNamed(Routes.signup);
                                 },
                                 child: ParaText(
@@ -139,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     textColor: AppColors.primaryBlack)),
                           ],
                         ),
-                        SizedBox(height: 50),
+                        const SizedBox(height: 50),
                       ],
                     ),
                   ),

@@ -63,6 +63,7 @@ class FirebaseService implements ApiInterface {
           .collection('users')
           .doc(userId)
           .collection('cart')
+          .doc()
           .id;
 
       CollectionReference cartRef =
@@ -143,13 +144,8 @@ class FirebaseService implements ApiInterface {
       await docRef.set(wishListModel.toMap());
 
       wishlistList.add(wishListModel);
-
-      print("Wishlist item added successfully with ID: $productId");
-
-      // Return the updated wishlist after adding the item
-      // return await fetchWishlist(user.uid);
     } catch (e) {
-      print("Error in adding item to wishlist: $e");
+      print("Error in adding the wishlist $e");
     }
     return wishlistList;
   }
@@ -189,8 +185,7 @@ class FirebaseService implements ApiInterface {
           print("Product not found for ID: $productId");
         }
       }
-
-      return products; // Returns a list of ProductModel objects
+      return products;
     });
   }
 
@@ -224,60 +219,59 @@ class FirebaseService implements ApiInterface {
   }
 
   @override
-  Future<String> removeItemFromWishlist(String productId) async {
+  Future<String> removeItemFromWishlist(String wishlistId) async {
     try {
-      User? user = Globals.auth.currentUser;
-      if (user!.uid == null) {
+      String? userId = Globals.userId;
+      if (userId == null) {
         return 'User not Logged in';
       }
-      if (user != null) {
-        await Globals.firestore
-            .collection("users")
-            .doc(user.uid)
-            .collection('wishlist')
-            .doc(productId)
-            .delete();
-      }
 
-      /* CollectionReference wishlistRef = Globals.firestore
+      CollectionReference wishlistRef = Globals.firestore
           .collection('users')
-          .doc(user.uid)
+          .doc(userId)
           .collection('wishlist');
 
-      await wishlistRef.doc(wishlistId).delete(); */
-
+      await wishlistRef.doc(wishlistId).delete();
       return 'Success';
     } catch (e) {
       return '$e';
     }
   }
 
-  //
-
   @override
-  Future<String> saveOrder(
-      String userId, List<CartModel> cartItems, String address) async {
+  Future<String> saveOrder(String userId, List<CartModel> cartItems,
+      String address, OrderStatus status) async {
     try {
-      final CollectionReference orderRef = Globals.firestore
+      final CollectionReference userOrderRef = Globals.firestore
           .collection('users')
           .doc(userId)
-          .collection('orders');
+          .collection('userOrders');
 
-      for (var item in cartItems) {
-        String orderId = orderRef.doc().id;
+      String orderId = userOrderRef.doc().id;
 
-        OrderModel order = OrderModel(
-          orderId: orderId,
-          userId: userId,
-          productId: item.productId,
-          quantity: item.quantity,
-          price: item.price,
-          createdAt: DateTime.now(),
-          address: address,
-        );
+      List<Map<String, dynamic>> items = cartItems
+          .map((item) => {
+                'productId': item.productId,
+                'quantity': item.quantity,
+                'price': item.price,
+              })
+          .toList();
 
-        await orderRef.doc(orderId).set(order.toMap());
-      }
+      // Create the order model
+      OrderModel order = OrderModel(
+        orderId: orderId,
+        userId: userId,
+        items: items,
+        createdAt: DateTime.now(),
+        address: address,
+        orderStatus: status, // Keep as enum
+        applyCoupon: true,
+        deliveryTip: 23,
+        deliveryInstructions: '',
+      );
+
+      await userOrderRef.doc(orderId).set(order.toMap());
+
       return 'Success';
     } catch (e) {
       return '$e';
@@ -287,20 +281,16 @@ class FirebaseService implements ApiInterface {
   @override
   Future<List<OrderModel>> fetchOrders() async {
     try {
-      String? userId = Globals.userId;
-      final CollectionReference orderRef = Globals.firestore
-          .collection('users')
-          .doc(userId)
-          .collection('orders');
+      // final CollectionReference orderRef = Globals.firestore.collection('orders');
+      //
+      // QuerySnapshot snapshot = await orderRef.get();
+      //
+      // List<OrderModel> orders = snapshot.docs.map((doc) {
+      //   return OrderModel.fromMap(doc.data() as Map<String, dynamic>)
+      //     ..createdAt = (doc['createdAt'] as Timestamp).toDate();
+      // }).toList();
 
-      QuerySnapshot snapshot = await orderRef.get();
-
-      List<OrderModel> orders = snapshot.docs.map((doc) {
-        return OrderModel.fromMap(doc.data() as Map<String, dynamic>)
-          ..createdAt = (doc['createdAt'] as Timestamp).toDate();
-      }).toList();
-
-      return orders;
+      return [];
     } catch (e) {
       print("Error fetching orders: $e");
       return [];
@@ -441,5 +431,39 @@ class FirebaseService implements ApiInterface {
       print("Error in fetching the single product : $e");
     }
     return null;
+  }
+
+  //increament product quantity in firebase
+  @override
+  Future<void> incrementProductQuantity(String cartId, int newQuantity) async {
+    try {
+      await Globals.firestore
+          .collection('users')
+          .doc(Globals.userId)
+          .collection('cart')
+          .doc(cartId)
+          .update({
+        'quantity': newQuantity,
+      });
+    } catch (e) {
+      print("Error in incrementing product quantity: $e");
+    }
+  }
+
+  // Decrement product quantity in Firebase
+  @override
+  Future<void> decrementProductQuantity(String cartId, int newQuantity) async {
+    try {
+      await Globals.firestore
+          .collection('users')
+          .doc(Globals.userId)
+          .collection('cart')
+          .doc(cartId)
+          .update({
+        'quantity': newQuantity,
+      });
+    } catch (e) {
+      print("Error in decrementing product quantity: $e");
+    }
   }
 }

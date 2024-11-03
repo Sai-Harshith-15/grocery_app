@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class WishListModel {
-  String wishlistId; // Auto-generated
-  String userId; // Reference to users
-  String productId; // Reference to products
-  Timestamp createdAt; // Now using Timestamp
+  String wishlistId;
+  String userId;
+  String productId;
+  Timestamp createdAt;
 
   WishListModel({
     required this.wishlistId,
@@ -13,13 +13,12 @@ class WishListModel {
     required this.createdAt,
   });
 
-  // Convert a WishListModel to a Map (to store in database)
   Map<String, dynamic> toMap() {
     return {
       'wishlistId': wishlistId,
       'userId': userId,
       'productId': productId,
-      'createdAt': createdAt, // No need to convert to string
+      'createdAt': createdAt,
     };
   }
 

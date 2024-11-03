@@ -11,14 +11,13 @@ abstract class ApiInterface {
   Future<List<CartModel>> fetchCartItems();
   Future<String> addItemToCart(CartModel cartModel);
   //wishlist
-  // Future<List<ProductModel>> fetchWishlistItems();
   Stream<List<ProductModel>> fetchWishlistItems();
   Future<List<WishListModel>> addItemToWishlist(String productId);
   Future<ProductModel?> getWishlistDetailsByProductById(String productId);
   Future<String> removeItemFromWishlist(String wishlistId);
 //
-  Future<String> saveOrder(
-      String userId, List<CartModel> cartModel, String address);
+  Future<String> saveOrder(String userId, List<CartModel> cartModel,
+      String address, OrderStatus status);
   Future<List<OrderModel>> fetchOrders();
   Future<String> removeItemFromCart(String cartId);
   Future<String> addRating(String productId, String userId, double rating);
@@ -26,4 +25,6 @@ abstract class ApiInterface {
   Future<Map<String, dynamic>> fetchProductRating(String productId);
   Future<List<Map<String, dynamic>>> fetchAllReviews(String productId);
   Future<ProductModel?> fetchsingleProductFromFirebase(String productId);
+  Future<void> incrementProductQuantity(String productId, int newQuantity);
+  Future<void> decrementProductQuantity(String productId, int newQuantity);
 }
