@@ -46,13 +46,9 @@ class ProductController extends GetxController {
     super.onInit();
     fetchCategories();
     fetchProducts();
-    /* searchController.addListener(() {
-      filterItems(searchController.text);
-      updateSearchResults(searchController.text);
-    }); */
+
     searchController.addListener(() {
       searchText.value = searchController.text; // Update reactive variable
-      // filterItems(searchController.text);
       updateSearchResults(
           searchController.text); // Filter products based on search
       isOverlayVisible.value = searchController.text.isNotEmpty;
@@ -131,6 +127,24 @@ class ProductController extends GetxController {
         .where((category) =>
             category.categoryName.toLowerCase().contains(lowerCaseQuery))
         .toList();
+    if (query.isEmpty) {
+      // Reset to show all products in the selected category if query is empty
+      selectedCategoryProducts.assignAll(productsList
+          .where((product) =>
+              product.categoryId == slectedCategory.value?.categoryId)
+          .toList());
+    } else {
+      // Filter selectedCategoryProducts based on search text
+      selectedCategoryProducts.value = selectedCategoryProducts
+          .where((product) =>
+              product.productName.toLowerCase().contains(lowerCaseQuery))
+          .toList();
+    }
+    /* // Filter selectedCategoryProducts based on search text
+    selectedCategoryProducts.value = selectedCategoryProducts
+        .where((product) =>
+            product.productName.toLowerCase().contains(lowerCaseQuery))
+        .toList(); */
   }
 
   Future<void> fetchProducts() async {

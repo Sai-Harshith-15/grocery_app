@@ -1,17 +1,17 @@
 import 'package:get/get.dart';
 
 class CartModel {
-  String cartId;     // Auto-generated
-  String userId;      // Reference to users
+  String cartId; // Auto-generated
+  String userId; // Reference to users
   DateTime createdAt; // Timestamp for creation
   DateTime updatedAt; // Timestamp for last update
-  String productId;   // Reference to products
-  RxInt quantity;       // Number of items in the cart
-  double price;  
+  String productId; // Reference to products
+  RxInt quantity; // Number of items in the cart
+  double price;
   String productImg;
   int productQuantity;
   String productname;
-  RxBool isSelected;     // Price of the product
+  RxBool isSelected; // Price of the product
 
   CartModel({
     required this.cartId,
@@ -24,9 +24,9 @@ class CartModel {
     required this.productImg,
     required this.productQuantity,
     required this.productname,
-   bool isSelected = true,
-  }):isSelected = RxBool(isSelected),
-     quantity = RxInt(quantity);
+    bool isSelected = true,
+  })  : isSelected = RxBool(isSelected),
+        quantity = RxInt(quantity);
 
   // Convert a CartModel to a Map (to store in database)
   Map<String, dynamic> toMap() {
@@ -38,29 +38,26 @@ class CartModel {
       'productId': productId,
       'quantity': quantity.value,
       'price': price,
-      'productImg':productImg,
-      'productQuantity':productQuantity,
-      'productname':productname,
-      'isSelected':isSelected.value,
+      'productImg': productImg,
+      'productQuantity': productQuantity,
+      'productname': productname,
+      'isSelected': isSelected.value,
     };
   }
 
   // Create a CartModel from a Map (retrieved from database)
   factory CartModel.fromMap(Map<String, dynamic> map) {
     return CartModel(
-      cartId: map['cartId'],
-      userId: map['userId'],
-      createdAt: DateTime.parse(map['createdAt']),
-      updatedAt: DateTime.parse(map['updatedAt']),
-      productId: map['productId'],
-      quantity: map['quantity'],
-      price: map['price'].toDouble(), // Ensure price is a double
-      productImg:map['productImg'],
-      productQuantity:map['productQuantity'],
-      productname:map['productname'],
-      isSelected:map['isSelected']
-      
-      
-    );
+        cartId: map['cartId'],
+        userId: map['userId'],
+        createdAt: DateTime.parse(map['createdAt']),
+        updatedAt: DateTime.parse(map['updatedAt']),
+        productId: map['productId'],
+        quantity: map['quantity'],
+        price: map['price'].toDouble(), // Ensure price is a double
+        productImg: map['productImg'],
+        productQuantity: map['productQuantity'],
+        productname: map['productname'],
+        isSelected: map['isSelected']);
   }
 }

@@ -3,17 +3,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../constants/app_colors.dart';
+import '../../controllers/cart_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/wishlist_controller.dart';
+import '../../data/models/cart_model.dart';
 import '../../data/models/product_model.dart';
+import '../../globals/globals.dart';
 import '../widgets/inkwell_button.dart';
 import '../widgets/mytext.dart';
 import '../../constants/responsive.dart';
 import '../widgets/paraText.dart';
 
 class ProductdetailsScreen extends StatefulWidget {
-  final String? productId;
-  ProductdetailsScreen({super.key, this.productId});
+  const ProductdetailsScreen({
+    super.key,
+  });
 
   @override
   State<ProductdetailsScreen> createState() => _ProductdetailsScreenState();
@@ -21,21 +25,21 @@ class ProductdetailsScreen extends StatefulWidget {
 
 class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
   final productController = Get.find<ProductController>();
+  final cartController = Get.find<CartController>();
+
   final wishlistController = Get.find<WishlistController>();
 
+  String? productId;
   @override
   void initState() {
     super.initState();
 
-    // productId = (Get.arguments as ProductModel?)?.productId;
-    /* if (productId != null) {
+    productId = (Get.arguments as ProductModel?)?.productId;
+    if (productId != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        productController.fetchSingleProductById(widget.productId!);
+        productController.fetchSingleProductById(productId!);
       });
-    } */
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      productController.fetchSingleProductById(widget.productId!);
-    });
+    }
   }
 
   @override
@@ -159,21 +163,25 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
                                           : 24,
                                       textWeight: FontWeight.w700,
                                     ),
-                                    IconButton(
-                                      icon: Icon(
-                                        isFavorited
-                                            ? Icons.favorite
-                                            : Icons.favorite_border,
-                                        color: isFavorited
-                                            ? Colors.red
-                                            : Colors.grey,
-                                      ),
-                                      onPressed: () async {
-                                        await wishlistController
-                                            .toggleWishlistItem(
-                                                product.productId);
-                                      },
-                                    ),
+                                    Obx(() {
+                                      bool isFavorited = wishlistController
+                                          .isInWishlist(product.productId);
+                                      return IconButton(
+                                        icon: Icon(
+                                          isFavorited
+                                              ? Icons.favorite
+                                              : Icons.favorite_border,
+                                          color: isFavorited
+                                              ? Colors.red
+                                              : Colors.grey,
+                                        ),
+                                        onPressed: () async {
+                                          await wishlistController
+                                              .toggleWishlistItem(
+                                                  product.productId);
+                                        },
+                                      );
+                                    }),
                                   ],
                                 ),
                                 const SizedBox(height: 8),
@@ -233,9 +241,9 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
                                         ),
                                         IconButton(
                                           onPressed: () {
-                                            /* setState(() {
-                                              _quantity++;
-                                            }); */
+                                            // setState(() {
+                                            //   _quantity++;
+                                            // });
                                           },
                                           icon: const Icon(Icons.add),
                                           color: Colors.black,
@@ -349,7 +357,22 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
                                 Center(
                                   child: InkWellButton(
                                     text: 'Add to Cart',
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      //add to cart
+                                      cartController.addItemToCart(CartModel(
+                                          cartId: '',
+                                          userId: Globals.userId!,
+                                          createdAt: DateTime.now(),
+                                          updatedAt: DateTime.now(),
+                                          productId: product.productId,
+                                          quantity: product.productQuantity,
+                                          price: product.productPrice,
+                                          productImg: product.coverImg,
+                                          productQuantity:
+                                              product.productQuantity,
+                                          productname: product.productName,
+                                          isSelected: true));
+                                    },
                                   ),
                                 ),
                               ],
@@ -367,4 +390,12 @@ class _ProductdetailsScreenState extends State<ProductdetailsScreen> {
       ),
     );
   }
+
+/*   // Extracted Widget to handle Product Information
+  Widget _buildProductInformation() {
+    return 
+    
+ 
+ 
+  } */
 }

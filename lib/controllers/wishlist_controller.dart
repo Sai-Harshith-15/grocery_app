@@ -11,10 +11,18 @@ class WishlistController extends GetxController {
   RxList<ProductModel> wishlist = <ProductModel>[].obs;
   var isLoading = false.obs;
 
+  var totalAmount = 0.0.obs;
+
   @override
   void onInit() {
     super.onInit();
     fetchWishlist();
+  }
+
+  // Update the total amount whenever the wishlist is modified
+  void updateTotalAmount() {
+    totalAmount.value = wishlist.fold(0.0,
+        (sum, product) => sum + product.productPrice * product.productQuantity);
   }
 
   // Fetch wishlist items with product details
@@ -23,6 +31,7 @@ class WishlistController extends GetxController {
     isLoading(true);
     productRepository.fetchWishlistItems().listen((fetchedWishlistItems) {
       wishlist.assignAll(fetchedWishlistItems); // Replace current items
+      updateTotalAmount(); // Calculate total after fetching items
       isLoading(false);
     }, onError: (e) {
       showErrorSnackbar('Error fetching wishlist: $e');
@@ -41,6 +50,7 @@ class WishlistController extends GetxController {
       if (isInWishlist(productId)) {
         await productRepository.removeItemFromWishlist(productId);
         wishlist.removeWhere((product) => product.productId == productId);
+        updateTotalAmount();
         showSuccessSnackbar('Item removed from Wishlist');
       } else {
         await productRepository.addItemToWishlist(productId);
@@ -50,6 +60,7 @@ class WishlistController extends GetxController {
         if (productData != null && !isInWishlist(productId)) {
           // Avoid duplicate
           wishlist.add(productData);
+          updateTotalAmount();
           showSuccessSnackbar('Item added to Wishlist');
         }
       }

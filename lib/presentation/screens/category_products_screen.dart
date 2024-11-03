@@ -6,7 +6,7 @@ import '../../controllers/explore_controller.dart';
 import '../../controllers/home_controller.dart';
 import '../../data/models/category_model.dart';
 import '../widgets/mytext.dart';
-import '../widgets/products_card.dart';
+import '../widgets/product_card.dart';
 import '../widgets/rounded_textfield.dart';
 
 class CategoryProducts extends StatefulWidget {
@@ -20,6 +20,14 @@ class _CategoryProductsState extends State<CategoryProducts> {
   final productController = Get.find<ProductController>();
 
   final ExploreController exploreController = Get.find<ExploreController>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch products by category to initialize selectedCategoryProducts
+    final Category category = Get.arguments;
+    productController.fetchProductsByCategory(category.categoryId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +65,10 @@ class _CategoryProductsState extends State<CategoryProducts> {
                   controller: exploreController.searchController,
                   prefixIcon: Icons.search,
                   hintText: "Search ${category.categoryName}",
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    productController.updateSearchResults(value);
+                    productController.isOverlayVisible.value = value.isNotEmpty;
+                  },
                 ),
                 const SizedBox(height: 8),
                 Expanded(

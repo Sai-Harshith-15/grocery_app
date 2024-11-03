@@ -5,15 +5,16 @@ import 'mytext.dart';
 class SectionView extends StatelessWidget {
   final String title;
   final bool isShowSeeAllButton;
-  final VoidCallback onPressed;
+  void Function()? onTap;
   final EdgeInsets? padding;
 
-  const SectionView(
-      {super.key,
-      required this.title,
-      this.isShowSeeAllButton = true,
-      this.padding,
-      required this.onPressed});
+  SectionView({
+    super.key,
+    required this.title,
+    this.isShowSeeAllButton = true,
+    this.padding,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class SectionView extends StatelessWidget {
             //   width: 128,
             // ),
             GestureDetector(
-              onTap: () {},
+              onTap: onTap,
               child: HeadText(
                 text: "See all",
                 textColor: AppColors.secondaryGreen,

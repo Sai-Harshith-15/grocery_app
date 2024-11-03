@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
-
 import '../data/models/user_model.dart';
 import '../data/repositories/firebase_auth_repo.dart';
+import '../routes/routes.dart';
 
 class SignupController extends GetxController {
   final FirebaseAuthRepo firebaseAuthRepo;
@@ -11,7 +11,6 @@ class SignupController extends GetxController {
   SignupController({required this.firebaseAuthRepo});
   var isLoading = false.obs;
   var toggleIcon = false.obs;
-
 
   final usersList = <UserModel>[].obs;
 

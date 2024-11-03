@@ -201,6 +201,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       productController
                                                           .isOverlayVisible
                                                           .value = false;
+                                                      Get.toNamed(
+                                                          Routes.productdetails,
+                                                          arguments: item);
                                                     },
                                                   );
                                                 },
@@ -220,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SectionView(
                     title: "Recommended for you",
-                    onPressed: () {
+                    onTap: () {
                       Get.toNamed(Routes.products,
                           arguments: productController.productsList);
                     },
@@ -250,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SectionView(
                     title: "Shop By Category",
                     isShowSeeAllButton: true,
-                    onPressed: () {
+                    onTap: () {
                       Get.toNamed(Routes.explore);
                     },
                   ),
@@ -278,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   //best selling
                   SectionView(
                     title: "Best Selling",
-                    onPressed: () {
+                    onTap: () {
                       Get.toNamed(Routes.products,
                           arguments: productController.productsList);
                     },

@@ -1,63 +1,76 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import '../../constants/app_colors.dart';
+import '../../controllers/home_controller.dart';
+import '../../routes/routes.dart';
+import '../widgets/mytext.dart';
 import '../../data/models/category_model.dart';
 
-class CategoryGridItem extends StatelessWidget {
+class CategoryGridItem extends StatefulWidget {
   final Category category;
 
   const CategoryGridItem({Key? key, required this.category}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        // Calculate container height based on screen width or constraints
-        final containerHeight =
-            constraints.maxWidth * 1.315; // Adjust as needed
+  State<CategoryGridItem> createState() => _CategoryGridItemState();
+}
 
-        return Container(
-          height: containerHeight,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-            border:
-                Border.all(color: Colors.deepPurple.withOpacity(0.6), width: 2),
-          ),
+class _CategoryGridItemState extends State<CategoryGridItem> {
+  final productController = Get.find<ProductController>();
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        if (widget.category.categoryId != null) {
+          await productController
+              .fetchProductsByCategory(widget.category!.categoryId);
+          Get.toNamed(Routes.categoryproducts, arguments: widget.category);
+        } else {
+          print('Category ID is null, cannot fetch products.');
+        }
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: /* Colors.deepPurple.withOpacity(0.1) */ AppColors.background,
+          borderRadius: BorderRadius.circular(8.0),
+          border: Border.all(
+              color: /* Colors.deepPurple.withOpacity(0.6) */
+                  AppColors.primaryGreen,
+              width: 2),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                color: Colors.deepPurple.withOpacity(0.1),
+                color: /* Colors.deepPurple.withOpacity(0.1) */
+                    AppColors.background,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    category.categoryImg,
-                    height:
-                        containerHeight / 2, // Half the height of the container
-                    width: double.infinity,
+                  child: CachedNetworkImage(
+                    imageUrl: widget.category!.categoryImg,
+                    height: 130,
+                    width: 200,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
-              Container(
-                color: Colors.deepPurple.withOpacity(0.1),
-                height: containerHeight / 2, // Fill the remaining half
-                child: Center(
-                  child: Text(
-                    category.categoryName,
-                    style: TextStyle(
-                      color: AppColors.primaryBlack,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+              const SizedBox(
+                height: 16,
               ),
+              Center(
+                child: HeadText(
+                  text: widget.category.categoryName,
+                  textSize: 16,
+                  textWeight: FontWeight.w600,
+                ),
+              )
             ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

@@ -70,7 +70,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    /* InkWellButton(
+                    /*  InkWellButton(
                         text: 'Start Shopping',
                         onPressed: () {
                           Get.toNamed(Routes.tab);
@@ -112,8 +112,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           ),
                           title: GestureDetector(
                             onTap: () {
-                              print(
-                                  "productName: ${product.productName.toString()}");
                               Get.toNamed(Routes.productdetails,
                                   arguments: product);
                             },
@@ -229,7 +227,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: HeadText(
-                                text: '\$12.99',
+                                text:
+                                    '\$${wishlistController.totalAmount.value.toStringAsFixed(2)}', // need to show the total amount of all products in the wishlist
                                 textColor: AppColors.background,
                                 textWeight: FontWeight.w600,
                                 textSize: 12.0,
